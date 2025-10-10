@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import HeroSection from '@/components/sections/HeroSection';
 import GallerySection from '@/components/sections/GallerySection';
 import AboutSection from '@/components/sections/About';
 import ContactSection from '@/components/sections/ContactSection';
