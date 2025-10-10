@@ -4,14 +4,18 @@ import { useState, useEffect } from 'react';
 import { Palette, Award, Heart, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 
+interface AboutSectionProps {
+  scrollY: number; // ✅ Accept scrollY prop
+}
+
 // Smooth counting component
 function Counter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let start = 0;
-    const duration = 2000; // 2 seconds
-    const increment = target / (duration / 16); // ~60fps
+    const duration = 2000;
+    const increment = target / (duration / 16);
 
     const counter = setInterval(() => {
       start += increment;
@@ -29,7 +33,8 @@ function Counter({ target }: { target: number }) {
   return <div className="text-3xl font-light text-stone-900 mb-1">{count}+</div>;
 }
 
-export default function AboutSection() {
+export default function AboutSection({ scrollY }: AboutSectionProps) {
+  // You can now use scrollY inside AboutSection if needed
   return (
     <section id="about" className="py-32 px-6 lg:px-12 bg-white/50">
       <div className="max-w-7xl mx-auto">
@@ -54,7 +59,6 @@ export default function AboutSection() {
               Akshay Chhabhaiya
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded-full mb-10" />
-
             <div className="space-y-6 text-stone-600 leading-relaxed text-lg">
               <p>
                 For over a decade, I&apos;ve been exploring the delicate balance between chaos and harmony
