@@ -1,9 +1,34 @@
 'use client';
 
-import { Palette, Award, Heart } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Palette, Award, Heart, ArrowDown } from 'lucide-react';
 
 interface AboutSectionProps {
   scrollY: number;
+}
+
+function Counter({ target }: { target: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 2000; // 2 seconds
+    const increment = target / (duration / 20); // update every 20ms
+
+    const counter = setInterval(() => {
+      start += increment;
+      if (start >= target) {
+        setCount(target);
+        clearInterval(counter);
+      } else {
+        setCount(Math.ceil(start));
+      }
+    }, 20);
+
+    return () => clearInterval(counter);
+  }, [target]);
+
+  return <div className="text-3xl font-light text-stone-900 mb-1">{count}+</div>;
 }
 
 export default function AboutSection({ scrollY }: AboutSectionProps) {
@@ -24,7 +49,7 @@ export default function AboutSection({ scrollY }: AboutSectionProps) {
 
           <div>
             <h2 className="text-5xl md:text-6xl font-light tracking-tight text-stone-900 mb-8">
-              The Artist
+              Akshay Chhabhaiya
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded-full mb-10" />
 
@@ -52,23 +77,40 @@ export default function AboutSection({ scrollY }: AboutSectionProps) {
                 <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
                   <Palette className="text-amber-700" size={28} />
                 </div>
-                <div className="text-3xl font-light text-stone-900 mb-1">10+</div>
+                <Counter target={10} />
                 <div className="text-sm text-stone-500 tracking-wide">Years</div>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
                   <Award className="text-amber-700" size={28} />
                 </div>
-                <div className="text-3xl font-light text-stone-900 mb-1">25+</div>
+                <Counter target={25} />
                 <div className="text-sm text-stone-500 tracking-wide">Exhibitions</div>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
                   <Heart className="text-amber-700" size={28} />
                 </div>
-                <div className="text-3xl font-light text-stone-900 mb-1">200+</div>
+                <Counter target={200} />
                 <div className="text-sm text-stone-500 tracking-wide">Collectors</div>
               </div>
+            </div>
+
+            {/* Explore Works Button */}
+            <div className="mt-16 flex justify-center lg:justify-start">
+              <button
+                onClick={() =>
+                  document.getElementById('writings')?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className="group flex flex-col items-center gap-3"
+              >
+                <span className="text-sm tracking-widest text-stone-500 group-hover:text-amber-700 transition-colors">
+                  EXPLORE WORKS
+                </span>
+                <div className="w-12 h-12 rounded-full border-2 border-stone-300 group-hover:border-amber-700 flex items-center justify-center transition-all group-hover:translate-y-1">
+                  <ArrowDown size={20} className="text-stone-500 group-hover:text-amber-700" />
+                </div>
+              </button>
             </div>
           </div>
         </div>

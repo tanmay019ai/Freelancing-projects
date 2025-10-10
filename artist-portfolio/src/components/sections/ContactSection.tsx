@@ -162,7 +162,7 @@ export default function ContactSection() {
         {/* Footer */}
         <div className="mt-24 pt-12 border-t border-stone-200 text-center">
           <p className="text-stone-500 text-sm tracking-wider">
-            © 2024 ARTISTA. All rights reserved.
+            © 2025 ARTISTA. All rights reserved.
           </p>
         </div>
       </div>

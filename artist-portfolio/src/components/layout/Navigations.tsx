@@ -41,16 +41,22 @@ export default function Navigation() {
 
         <div className="hidden md:flex items-center gap-12">
           <button
-            onClick={() => scrollToSection('gallery')}
-            className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors"
-          >
-            GALLERY
-          </button>
-          <button
             onClick={() => scrollToSection('about')}
             className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors"
           >
             ABOUT
+          </button>
+          <button
+            onClick={() => scrollToSection('writings')}
+            className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors"
+          >
+            WRITINGS
+          </button>
+          <button
+            onClick={() => scrollToSection('gallery')}
+            className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors"
+          >
+            GALLERY
           </button>
           <button
             onClick={() => scrollToSection('contact')}
@@ -72,16 +78,22 @@ export default function Navigation() {
         <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg shadow-lg">
           <div className="flex flex-col gap-6 px-6 py-8">
             <button
-              onClick={() => scrollToSection('gallery')}
-              className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors text-left"
-            >
-              GALLERY
-            </button>
-            <button
               onClick={() => scrollToSection('about')}
               className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors text-left"
             >
               ABOUT
+            </button>
+            <button
+              onClick={() => scrollToSection('writings')}
+              className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors text-left"
+            >
+              WRITINGS
+            </button>
+            <button
+              onClick={() => scrollToSection('gallery')}
+              className="text-sm tracking-wider text-stone-600 hover:text-amber-700 transition-colors text-left"
+            >
+              GALLERY
             </button>
             <button
               onClick={() => scrollToSection('contact')}
