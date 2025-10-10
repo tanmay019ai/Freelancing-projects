@@ -1,10 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { Mail, Instagram, MessageCircle } from 'lucide-react';
 
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+
 export default function ContactSection() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: '',
@@ -12,7 +18,7 @@ export default function ContactSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -38,18 +44,17 @@ export default function ContactSection() {
         {/* Heading */}
         <div className="text-center mb-20">
           <h2 className="text-5xl md:text-6xl font-light tracking-tight text-stone-900 mb-6">
-            Let's Create Together
+            Let&apos;s Create Together
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent mx-auto rounded-full mb-8" />
           <p className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed">
-            Whether you're interested in a commission, collaboration, or just want to connect,
-            I'd love to hear from you.
+            Whether you&apos;re interested in a commission, collaboration, or just want to connect,
+            I&apos;d love to hear from you.
           </p>
         </div>
 
-        {/* Grid layout */}
         <div className="grid lg:grid-cols-2 gap-16 items-start">
-          {/* Form Section */}
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <input
               type="text"
@@ -59,7 +64,6 @@ export default function ContactSection() {
               required
               className="w-full h-14 px-5 rounded-2xl border border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-base transition-all duration-200"
             />
-
             <input
               type="email"
               placeholder="Your Email"
@@ -68,7 +72,6 @@ export default function ContactSection() {
               required
               className="w-full h-14 px-5 rounded-2xl border border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-base transition-all duration-200"
             />
-
             <textarea
               placeholder="Your Message"
               value={formData.message}
@@ -77,7 +80,6 @@ export default function ContactSection() {
               rows={6}
               className="w-full px-5 py-4 rounded-2xl border border-stone-300 focus:border-amber-600 focus:ring-2 focus:ring-amber-100 outline-none text-base resize-none transition-all duration-200"
             />
-
             <button
               type="submit"
               disabled={isSubmitting}
@@ -91,7 +93,7 @@ export default function ContactSection() {
             </button>
           </form>
 
-          {/* Info Section */}
+          {/* Contact Info */}
           <div className="space-y-12 lg:pl-12">
             <div className="relative">
               <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-amber-600 to-transparent rounded-full" />
@@ -130,7 +132,7 @@ export default function ContactSection() {
                   </div>
                 </div>
 
-                {/* Studio Address */}
+                {/* Studio */}
                 <div className="flex items-start gap-6">
                   <div className="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center flex-shrink-0">
                     <MessageCircle className="text-amber-700" size={24} />
@@ -151,7 +153,7 @@ export default function ContactSection() {
             <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl p-8 shadow-sm">
               <h3 className="text-2xl font-light text-stone-900 mb-4">Commission Work</h3>
               <p className="text-stone-600 leading-relaxed mb-4">
-                I'm currently accepting commissions for original artworks. Each piece
+                I&apos;m currently accepting commissions for original artworks. Each piece
                 is thoughtfully crafted to your vision and space.
               </p>
               <p className="text-sm text-stone-500">Typical timeline: 4–8 weeks</p>

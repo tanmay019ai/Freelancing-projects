@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { Palette, Award, Heart, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 
+// Smooth counting component
 function Counter({ target }: { target: number }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let start = 0;
     const duration = 2000; // 2 seconds
-    const increment = target / (duration / 16); // smoother at ~60fps
+    const increment = target / (duration / 16); // ~60fps
 
     const counter = setInterval(() => {
       start += increment;
@@ -33,19 +34,21 @@ export default function AboutSection() {
     <section id="about" className="py-32 px-6 lg:px-12 bg-white/50">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          {/* Artist Image */}
           <div className="relative">
             <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[3/4]">
               <Image
                 src="https://images.pexels.com/photos/3778603/pexels-photo-3778603.jpeg?auto=compress&cs=tinysrgb&w=800"
                 alt="Artist Portrait"
                 width={800}
-                height={1066} // aspect 3/4
+                height={1066}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="absolute -bottom-8 -right-8 w-64 h-64 bg-gradient-to-br from-amber-400 to-orange-600 rounded-full opacity-20 blur-3xl -z-10" />
           </div>
 
+          {/* Artist Info */}
           <div>
             <h2 className="text-5xl md:text-6xl font-light tracking-tight text-stone-900 mb-8">
               Akshay Chhabhaiya
@@ -54,7 +57,7 @@ export default function AboutSection() {
 
             <div className="space-y-6 text-stone-600 leading-relaxed text-lg">
               <p>
-                For over a decade, I've been exploring the delicate balance between chaos and harmony
+                For over a decade, I&apos;ve been exploring the delicate balance between chaos and harmony
                 through my art. Each piece is a journey, a conversation between color, texture, and emotion.
               </p>
               <p>
@@ -68,6 +71,7 @@ export default function AboutSection() {
               </p>
             </div>
 
+            {/* Counters */}
             <div className="grid grid-cols-3 gap-8 mt-12">
               <div className="text-center">
                 <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
@@ -94,6 +98,7 @@ export default function AboutSection() {
               </div>
             </div>
 
+            {/* Explore Works Button */}
             <div className="mt-16 flex justify-center lg:justify-start">
               <button
                 onClick={() =>
