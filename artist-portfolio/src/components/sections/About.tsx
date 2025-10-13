@@ -4,37 +4,39 @@ import { useState, useEffect } from 'react';
 import { Palette, Award, Heart, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 
-interface AboutSectionProps {
-  scrollY: number; // ✅ Accept scrollY prop
+interface AboutData {
+  name: string;
+  bio1: string;
+  bio2: string;
+  bio3: string;
+  stats: { years: number; exhibitions: number; collectors: number };
 }
 
-// Smooth counting component
-function Counter({ target }: { target: number }) {
-  const [count, setCount] = useState(0);
+export default function AboutSection() {
+  const [about, setAbout] = useState<AboutData | null>(null);
 
+  // Fetch About data from API
   useEffect(() => {
-    let start = 0;
-    const duration = 2000;
-    const increment = target / (duration / 16);
-
-    const counter = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(counter);
-      } else {
-        setCount(Math.ceil(start));
+    async function fetchAbout() {
+      try {
+        const res = await fetch('/api/about');
+        const data = await res.json();
+        if (data.success) setAbout(data.data);
+      } catch (err) {
+        console.error('Error fetching About data:', err);
       }
-    }, 16);
+    }
+    fetchAbout();
+  }, []);
 
-    return () => clearInterval(counter);
-  }, [target]);
+  if (!about) {
+    return (
+      <section id="about" className="py-32 px-6 lg:px-12 text-center">
+        <p className="text-stone-500 text-lg">Loading artist information...</p>
+      </section>
+    );
+  }
 
-  return <div className="text-3xl font-light text-stone-900 mb-1">{count}+</div>;
-}
-
-export default function AboutSection({ scrollY }: AboutSectionProps) {
-  // You can now use scrollY inside AboutSection if needed
   return (
     <section id="about" className="py-32 px-6 lg:px-12 bg-white/50">
       <div className="max-w-7xl mx-auto">
@@ -56,50 +58,20 @@ export default function AboutSection({ scrollY }: AboutSectionProps) {
           {/* Artist Info */}
           <div>
             <h2 className="text-5xl md:text-6xl font-light tracking-tight text-stone-900 mb-8">
-              Akshay Chhabhaiya
+              {about.name}
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 to-transparent rounded-full mb-10" />
             <div className="space-y-6 text-stone-600 leading-relaxed text-lg">
-              <p>
-                For over a decade, I&apos;ve been exploring the delicate balance between chaos and harmony
-                through my art. Each piece is a journey, a conversation between color, texture, and emotion.
-              </p>
-              <p>
-                My work draws inspiration from the natural world, urban landscapes, and the raw emotions
-                that connect us all. I believe art should not just be seen, but felt—experienced in a
-                way that resonates deeply within.
-              </p>
-              <p>
-                Based in the heart of the creative district, my studio is a sanctuary where ideas transform
-                into visual poetry. Every brushstroke is intentional, every color choice deliberate.
-              </p>
+              <p>{about.bio1}</p>
+              <p>{about.bio2}</p>
+              <p>{about.bio3}</p>
             </div>
 
             {/* Counters */}
             <div className="grid grid-cols-3 gap-8 mt-12">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                  <Palette className="text-amber-700" size={28} />
-                </div>
-                <Counter target={10} />
-                <div className="text-sm text-stone-500 tracking-wide">Years</div>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                  <Award className="text-amber-700" size={28} />
-                </div>
-                <Counter target={25} />
-                <div className="text-sm text-stone-500 tracking-wide">Exhibitions</div>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                  <Heart className="text-amber-700" size={28} />
-                </div>
-                <Counter target={200} />
-                <div className="text-sm text-stone-500 tracking-wide">Collectors</div>
-              </div>
+              <CounterItem label="Years" value={about.stats.years} />
+              <CounterItem label="Exhibitions" value={about.stats.exhibitions} />
+              <CounterItem label="Collectors" value={about.stats.collectors} />
             </div>
 
             {/* Explore Works Button */}
@@ -122,5 +94,40 @@ export default function AboutSection({ scrollY }: AboutSectionProps) {
         </div>
       </div>
     </section>
+  );
+}
+
+// Small counter component
+function CounterItem({ label, value }: { label: string; value: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 2000;
+    const increment = value / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= value) {
+        setCount(value);
+        clearInterval(timer);
+      } else {
+        setCount(Math.ceil(start));
+      }
+    }, 16);
+
+    return () => clearInterval(timer);
+  }, [value]);
+
+  return (
+    <div className="text-center">
+      <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
+        {label === 'Years' && <Palette className="text-amber-700" size={28} />}
+        {label === 'Exhibitions' && <Award className="text-amber-700" size={28} />}
+        {label === 'Collectors' && <Heart className="text-amber-700" size={28} />}
+      </div>
+      <div className="text-3xl font-light text-stone-900 mb-1">{count}+</div>
+      <div className="text-sm text-stone-500 tracking-wide">{label}</div>
+    </div>
   );
 }
