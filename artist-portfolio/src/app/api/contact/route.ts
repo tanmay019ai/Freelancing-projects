@@ -1,8 +1,7 @@
 // artista/app/api/contact/route.ts
 import { NextResponse } from 'next/server';
 
-const contacts: Array<{ id: number; name: string; email: string; message: string; createdAt: string }> = [];
-
+let contacts: Array<{ id: number; name: string; email: string; message: string; createdAt: string }> = [];
 
 export async function POST(req: Request) {
   try {
