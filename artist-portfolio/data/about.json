@@ -1,0 +1,11 @@
+{
+  "name": "Default Artist",
+  "bio1": "This is a sample bio line 1.",
+  "bio2": "This is a sample bio line 2.",
+  "bio3": "This is a sample bio line 3.",
+  "stats": {
+    "years": 0,
+    "exhibitions": 0,
+    "collectors": 0
+  }
+}
