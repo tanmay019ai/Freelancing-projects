@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import dotenv from "dotenv";
+dotenv.config();
 
 // ✅ Create Supabase client with service role key (server-side only)
 const supabase = createClient(
