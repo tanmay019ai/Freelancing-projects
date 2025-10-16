@@ -31,18 +31,20 @@ export default function GallerySection({ scrollY, refreshTrigger }: GallerySecti
 
       if (res.data.success && res.data.data) {
         // Fill exactly 6 slots (Image 1 → Card 1)
-        const filled = Array.from({ length: 6 }, (_, i) => {
-          const found = res.data.data.find((item) => item.id === i + 1);
-          return (
-            found || {
-              id: i + 1,
-              title: '',
-              medium: '',
-              year: '',
-              image_url: null,
-            }
-          );
-        });
+        const rawData = res.data?.data ?? [];
+const filled = Array.from({ length: 6 }, (_, i) => {
+  const found = rawData.find((item) => item.id === i + 1);
+  return (
+    found || {
+      id: i + 1,
+      title: '',
+      medium: '',
+      year: '',
+      image_url: null,
+    }
+  );
+});
+
         setArtworks(filled);
       } else {
         console.error('❌ Failed to load gallery:', res.data);
