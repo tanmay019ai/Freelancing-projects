@@ -5,7 +5,13 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: {
-    domains: ['images.pexels.com'], // add your external domains here
+    domains: ['images.pexels.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.supabase.co',
+      },
+    ], // add your external domains here
   },
 };
 

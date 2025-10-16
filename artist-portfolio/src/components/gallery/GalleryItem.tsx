@@ -8,7 +8,7 @@ interface Artwork {
   title: string;
   medium: string;
   year: string;
-  image: string;
+  image_url: string; // Updated to match API
 }
 
 interface GalleryItemProps {
@@ -32,7 +32,7 @@ export default function GalleryItem({ artwork, index, onClick }: GalleryItemProp
     >
       <div className="relative overflow-hidden rounded-3xl bg-stone-200 aspect-[3/4] shadow-lg hover:shadow-2xl transition-all duration-500">
         <Image
-          src={artwork.image}
+          src={artwork.image_url} // updated property
           alt={artwork.title}
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-110"

@@ -1,60 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GalleryItem from '../gallery/GalleryItem';
 import Image from 'next/image';
+import axios from 'axios';
 
 interface GallerySectionProps {
   scrollY: number;
 }
 
-const artworks = [
-  {
-    id: 1,
-    title: 'Golden Horizons',
-    medium: 'Acrylic on Canvas',
-    year: '2024',
-    image: 'https://images.pexels.com/photos/1579708/pexels-photo-1579708.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 2,
-    title: 'Whispers of Time',
-    medium: 'Oil on Canvas',
-    year: '2024',
-    image: 'https://images.pexels.com/photos/1404819/pexels-photo-1404819.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 3,
-    title: 'Urban Dreams',
-    medium: 'Mixed Media',
-    year: '2023',
-    image: 'https://images.pexels.com/photos/1646953/pexels-photo-1646953.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 4,
-    title: 'Silent Echo',
-    medium: 'Acrylic on Canvas',
-    year: '2023',
-    image: 'https://images.pexels.com/photos/1070534/pexels-photo-1070534.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 5,
-    title: 'Ethereal Dance',
-    medium: 'Oil on Canvas',
-    year: '2024',
-    image: 'https://images.pexels.com/photos/1266808/pexels-photo-1266808.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-  {
-    id: 6,
-    title: 'Autumn Reverie',
-    medium: 'Acrylic on Canvas',
-    year: '2023',
-    image: 'https://images.pexels.com/photos/1269968/pexels-photo-1269968.jpeg?auto=compress&cs=tinysrgb&w=800',
-  },
-];
+interface Artwork {
+  id: number;
+  title: string;
+  medium: string;
+  year: string;
+  image_url: string; // URL from Supabase storage
+}
 
 export default function GallerySection({ scrollY }: GallerySectionProps) {
-  const [selectedArtwork, setSelectedArtwork] = useState<typeof artworks[0] | null>(null);
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const res = await axios.get<{ success: boolean; data?: Artwork[]; message?: string }>('/api/gallery');
+        if (res.data.success) {
+          setArtworks(res.data.data || []); // assuming your route returns { success, data }
+        } else {
+          console.error('Failed to load gallery:', res.data.message);
+        }
+      } catch (err) {
+        console.error('Gallery fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGallery();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="gallery" className="py-32 px-6 lg:px-12 text-center">
+        <p className="text-stone-500">Loading gallery...</p>
+      </section>
+    );
+  }
 
   return (
     <section id="gallery" className="py-32 px-6 lg:px-12">
@@ -91,7 +84,7 @@ export default function GallerySection({ scrollY }: GallerySectionProps) {
         >
           <div className="max-w-5xl w-full relative" onClick={(e) => e.stopPropagation()}>
             <Image
-              src={selectedArtwork.image}
+              src={selectedArtwork.image_url}
               alt={selectedArtwork.title}
               width={1200}
               height={1600}
