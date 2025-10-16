@@ -1,4 +1,4 @@
-// /app/api/gallery/route.ts
+// /app/api/gallery/route.ts (Portfolio Side)
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -27,16 +27,15 @@ export async function GET() {
   }
 }
 
-// ✅ POST — Only update provided slots, keep others intact
+// ✅ POST — Safe update (handles empty slots)
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const titles = formData.getAll('title[]') as string[];
     const mediums = formData.getAll('medium[]') as string[];
     const years = formData.getAll('year[]') as string[];
-    const files = formData.getAll('image[]') as File[];
+    const files = formData.getAll('image[]');
 
-    // Ensure exactly 6 records (slots)
     const totalSlots = 6;
     const updates = [];
 
@@ -44,11 +43,11 @@ export async function POST(req: Request) {
       const file = files[i];
       let image_url: string | null = null;
 
-      // ✅ Upload only if a new file was provided
-      if (file && file.size > 0) {
+      // ✅ Only upload valid images (skip placeholders or empty blobs)
+      if (file instanceof File && file.size > 0 && file.type.startsWith('image/')) {
         const fileName = `gallery/${Date.now()}_${file.name}`;
         const { error: uploadError } = await supabase.storage
-          .from('artworks') // your Supabase bucket name
+          .from('artworks')
           .upload(fileName, file, { upsert: false });
 
         if (uploadError) throw uploadError;
@@ -60,29 +59,21 @@ export async function POST(req: Request) {
         image_url = urlData.publicUrl;
       }
 
-      // ✅ Build slot update object
-      const updateData: {
-        title: string;
-        medium: string;
-        year: string;
-        image_url?: string | null;
-      } = {
+      // ✅ Prepare slot update data
+      const updateData: Record<string, any> = {
         title: titles[i] || '',
         medium: mediums[i] || '',
         year: years[i] || '',
       };
 
-      if (image_url) {
-        updateData.image_url = image_url;
-      }
+      if (image_url) updateData.image_url = image_url;
 
-      // ✅ Only update the slot that changed
-      const { error } = await supabase
+      // ✅ Upsert ensures it creates if missing, updates if exists
+      const { error: upsertError } = await supabase
         .from('gallery')
-        .update(updateData)
-        .eq('id', i + 1);
+        .upsert({ id: i + 1, ...updateData }, { onConflict: 'id' });
 
-      if (error) throw error;
+      if (upsertError) throw upsertError;
 
       updates.push({ slot: i + 1, ...updateData });
     }
@@ -93,9 +84,12 @@ export async function POST(req: Request) {
       updated: updates.length,
     });
   } catch (err) {
-    console.error('❌ Gallery POST error:', err);
+    console.error('❌ Gallery POST error (portfolio side):', err);
     return NextResponse.json(
-      { success: false, message: 'Failed to update gallery' },
+      {
+        success: false,
+        message: (err as Error).message || 'Failed to update gallery',
+      },
       { status: 500 }
     );
   }
